@@ -12,8 +12,6 @@ app:
     phone: 12345
     password: 12345
 
-
-
 file:
   storage:
     localStoreEnabled: false
