@@ -9,6 +9,7 @@ import ru.pugart.task.api.service.repository.CategoriesRepository;
 import ru.pugart.task.api.service.repository.TaskRepository;
 import ru.pugart.task.api.service.repository.entity.Task;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -62,5 +63,30 @@ public class TaskService implements TaskApi {
                 .findAllWithinCoordinates(latGte1, latLte1, latGte2, latLte2)
                 .log()
                 .switchIfEmpty(Flux.empty());
+    }
+
+    public Mono<Task> addImages(Mono<String> taskId, List<String> images) {
+        return getTaskById(taskId)
+                .log()
+                .filter(Objects::nonNull)
+                .switchIfEmpty(Mono.error(new RuntimeException("error: task with id: {} not found")))
+                .flatMap(task -> {
+                    //todo check duplicate
+                    task.getTaskDetails().getImages().addAll(images);
+                    return taskRepository.save(task);
+                })
+                .switchIfEmpty(Mono.empty());
+    }
+
+    public Mono<Task> deletedImages(Mono<String> taskId, List<String> images) {
+        return getTaskById(taskId)
+                .log()
+                .filter(Objects::nonNull)
+                .switchIfEmpty(Mono.error(new RuntimeException("error: task with id: {} not found")))
+                .flatMap(task -> {
+                    task.getTaskDetails().getImages().removeAll(images);
+                    return taskRepository.save(task);
+                })
+                .switchIfEmpty(Mono.empty());
     }
 }

@@ -14,16 +14,15 @@ app:
 
 file:
   storage:
-    localStoreEnabled: false
-    minioConfig:
-      endpoint: http://localhost:9000
-      port: 9000
-      accessKey: TMOmHBBwZzXpjRVq
-      secretKey: awi6dzSfPbARMUli23uQN66z8EUyvan6
-      secure: false
-      bucket-name: flux-test-market-2022
-      image-size: 10485760
-      file-size: 1073741824
+    endpoint: http://localhost:9000
+    port: 9000
+    accessKey: TMOmHBBwZzXpjRVq
+    secretKey: awi6dzSfPbARMUli23uQN66z8EUyvan6
+    secure: false
+    bucket-name: flux-test-market-2022
+    image-size: 10485760
+    file-size: 1073741824
+
 
 spring:
   servlet:
