@@ -3,6 +3,7 @@ package ru.pugart.task.api.service.api.minio;
 import lombok.extern.slf4j.Slf4j;
 import ru.pugart.task.api.service.api.StorageApi;
 
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -19,15 +20,15 @@ public class MinioStore implements StorageApi {
     }
 
     @Override
-    public String upload(byte[] content, String filename) {
+    public String upload(InputStream content, String filename) {
         return minioApi.putObject(content, filename);
     }
 
     @Override
-    public byte[] download(String path) {
+    public InputStream download(String path) {
         try {
-            minioApi.downloadObject(null, path);
-            return Files.readAllBytes(Paths.get(path));
+            return minioApi.downloadObject(null, path);
+//            return Files.readAllBytes(Paths.get(path));
         } catch (Exception ex) {
             log.error(ex.getLocalizedMessage(), ex);
             return null;

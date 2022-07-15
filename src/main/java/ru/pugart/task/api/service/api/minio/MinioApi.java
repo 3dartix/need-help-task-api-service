@@ -9,7 +9,7 @@ public interface MinioApi {
 
     void makeBucket(String bucketName);
 
-    String putObject(byte[] content, String fileName);
+    String putObject(InputStream content, String fileName);
 
     InputStream downloadObject(String bucketName, String objectName);
 

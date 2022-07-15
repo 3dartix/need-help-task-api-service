@@ -39,7 +39,7 @@ public class MinioService implements MinioApi {
     }
 
     @Override
-    public String putObject(byte[] content, String fileName) {
+    public String putObject(InputStream content, String fileName) {
         try {
             if (!this.bucketExists(bucketName)) {
                 this.makeBucket(bucketName);

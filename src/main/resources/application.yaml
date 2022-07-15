@@ -11,6 +11,9 @@ app:
   credentials:
     phone: 12345
     password: 12345
+  allowed-file-extension:
+    - jpg
+    - png
 
 file:
   storage:

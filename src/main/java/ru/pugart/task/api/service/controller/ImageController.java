@@ -1,7 +1,12 @@
 package ru.pugart.task.api.service.controller;
 
+import feign.form.FormData;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -24,5 +29,12 @@ public class ImageController {
     @PostMapping(value = "remove")
     public Mono<Task> remove(@RequestParam String author, @RequestParam String taskId, @RequestBody Flux<String> files){
         return imageService.remove(author, taskId, files);
+    }
+
+    @GetMapping(value = "download/{image}")
+    public ResponseEntity<Mono<InputStreamResource>> download(@PathVariable String image){
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + image.split("-")[1])
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE).body(imageService.download(image));
     }
 }

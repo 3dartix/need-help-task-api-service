@@ -48,11 +48,10 @@ public class MinioUtil {
     }
 
     @SneakyThrows
-    public void putObject(String bucketName, byte[] content, String filename, String fileType) {
-        InputStream inputStream = new ByteArrayInputStream(content);
+    public void putObject(String bucketName, InputStream content, String filename, String fileType) {
         minioClient.putObject(
                 PutObjectArgs.builder().bucket(bucketName).object(filename).stream(
-                        inputStream, -1, fileSize)
+                        content, -1, fileSize)
                         .contentType(fileType)
                         .build());
     }
