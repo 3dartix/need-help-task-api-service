@@ -64,9 +64,9 @@ public class ProfileService implements ProfileApi {
                 .switchIfEmpty(Mono.empty());
     }
 
-    @Override
     public Mono<Profile> findProfileByPhone(String phone) {
-        return profileRepository.findByPhone(phone);
+        return profileRepository.findByPhone(phone)
+                .switchIfEmpty(Mono.error(new RuntimeException(String.format("error, user with id: %s not found", phone))));
     }
 
     @Override
@@ -74,6 +74,7 @@ public class ProfileService implements ProfileApi {
         return findProfileByPhone(authorQuery)
                 .log()
                 .filter(profile -> checkAuthority(profile.getRoles()))
+                .switchIfEmpty(Mono.error(new RuntimeException("forbidden, profile with phone not found")))
                 .flux()
                 .flatMap(profile -> profileRepository.findAll())
                 .switchIfEmpty(Flux.empty());

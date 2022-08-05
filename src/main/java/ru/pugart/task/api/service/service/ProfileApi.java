@@ -7,6 +7,6 @@ import ru.pugart.task.api.service.repository.entity.Profile;
 public interface ProfileApi {
     Mono<Profile> createOrUpdate(Mono<Profile> profile);
     Mono<Profile> blockProfile(String authorQuery, String profile);
-    Mono<Profile> findProfileByPhone(String phone);
+//    Mono<Profile> findProfileByPhone(String phone);
     Flux<Profile> getAllProfiles(String authorQuery);
 }

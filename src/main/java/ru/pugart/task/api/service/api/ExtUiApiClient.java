@@ -11,6 +11,6 @@ import ru.pugart.task.api.service.dto.UserDto;
 public interface ExtUiApiClient {
     @GetMapping("api/config/get-roles/{group}")
     Flux<String> getRolesByGroup(@PathVariable String group, @RequestHeader("Authorization") String token);
-    @PostMapping("user/create")
+    @PostMapping("user/auth")
     Mono<JwtDto> getToken(@RequestBody UserDto userDto);
 }

@@ -27,11 +27,11 @@ public class ProfileController implements ProfileApi {
         return profileService.blockProfile(authorQuery, profile);
     }
 
-    @Override
-    @GetMapping(value = "find-by-phone")
-    public Mono<Profile> findProfileByPhone(@RequestParam String phone) {
-        return profileService.findProfileByPhone(phone);
-    }
+//    @Override
+//    @GetMapping(value = "find-by-phone")
+//    public Mono<Profile> findProfileByPhone(@RequestParam String phone) {
+//        return profileService.findProfileByPhone(phone);
+//    }
 
     @Override
     @GetMapping(value = "find-all-profiles")
