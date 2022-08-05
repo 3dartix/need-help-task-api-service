@@ -31,4 +31,13 @@ public class PerformerOrder {
     // срок завершения работ
     @Field(type = FieldType.Date, name = "date_end")
     private Instant dateEnd;
+
+    public static PerformerOrder example() {
+        return PerformerOrder.builder()
+                .phone("performer_example")
+                .amount(BigDecimal.valueOf(20234))
+                .dateStart(Instant.now())
+                .dateEnd(Instant.now().plusSeconds(20000))
+                .build();
+    }
 }

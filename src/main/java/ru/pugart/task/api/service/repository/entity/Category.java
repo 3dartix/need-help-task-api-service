@@ -24,4 +24,12 @@ public class Category {
     // главная категория, т.е. к какой катагории принадлежит категория (может быть пустой)
     @Field(type = FieldType.Text, name = "category_main")
     private String categoryMain;
+
+    public static Category example() {
+        return Category.builder()
+                .id("category_index_example")
+                .name("квартиры и помещения")
+                .categoryMain("ремонт")
+                .build();
+    }
 }

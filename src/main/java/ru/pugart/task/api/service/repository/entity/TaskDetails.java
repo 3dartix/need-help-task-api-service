@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Data
@@ -57,7 +58,7 @@ public class TaskDetails {
     private Float lon;
 
     /**
-     * Данные об исполнении от автора для исполнителя
+     * Данные об исполнении (от автора для исполнителя)
      */
 
     // исполнено или нет
@@ -77,7 +78,7 @@ public class TaskDetails {
     private String commentAuthor;
 
     /**
-     * Данные об исполнении от исполнителя автору
+     * Данные об исполнении (от исполнителя автору)
      */
 
     // какой-то комментарий от исполнителя
@@ -95,8 +96,22 @@ public class TaskDetails {
     public static TaskDetails example(){
         return TaskDetails.builder()
                 .title("Требуется ремонт ванной")
-                .shortDescription("ремонт,")
+                .shortDescription("ремонт краткое описание")
                 .fullDescription("Ремонт под ключ. Размеры помомещения: 5*5*2.4 кв.м. Постройть трап. Демонтировать старый ремонт")
+                .startAmount(BigDecimal.valueOf(15000))
+                .actualFrom(Instant.now())
+                .actualTo(Instant.now().plusSeconds(20000))
+                .finalAmount(BigDecimal.valueOf(20000))
+                .images(Arrays.asList("1.jpg", "2.jpg", "3.jpg"))
+                .lat(RandomUtils.nextFloat(54.720180205299116F, 54.722180205299116F))
+                .lon(RandomUtils.nextFloat(20.524978546018656F, 20.526978546018656F))
+                .performed(RandomUtils.nextBoolean())
+                .ratingPerformer(RandomUtils.nextInt(1, 11))
+                .performer("performer_example_phone")
+                .commentAuthor("any_comment_from_author_about_performer")
+                .commentPerformer("any_comment_from_performer_about_author")
+                .ratingAuthor(RandomUtils.nextInt(1, 11))
+                .receivedAmount(BigDecimal.valueOf(20000))
                 .build();
     }
 }

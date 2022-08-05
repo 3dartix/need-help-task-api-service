@@ -7,8 +7,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.pugart.task.api.service.repository.CategoriesRepository;
 import ru.pugart.task.api.service.repository.TaskRepository;
+import ru.pugart.task.api.service.repository.entity.Profile;
 import ru.pugart.task.api.service.repository.entity.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,17 +36,47 @@ public class TaskService implements TaskApi {
                         .switchIfEmpty(Mono.error(new RuntimeException("error, unknown category")))
                         .flatMap(category -> {
                             entity.setTaskCategory(category);
-                            return taskRepository.save(entity);
+                            log.debug("save task");
+                            return taskRepository.save(entity)
+                                    .log()
+                                    .flatMap(entityTask -> {
+                                        log.debug("save id task to profile");
+                                        return profileService.findProfileByPhone(entityTask.getAuthor())
+                                                .log()
+                                                .flatMap(entityProfile -> {
+                                                    if(entityProfile.getTasksAuthor() == null) {
+                                                        entityProfile.setTasksAuthor(new ArrayList<>());
+                                                    }
+                                                    entityProfile.getTasksAuthor().add(entityTask.getId());
+                                                    return profileService.createOrUpdate(Mono.just(entityProfile));
+                                                })
+                                                .flatMap(entityProfile -> Mono.just(entityTask));
+                                    });
                         }))
                 .switchIfEmpty(Mono.empty());
     }
 
     @Override
-    public Mono<Task> getTaskById(Mono<String> taskId) {
-        return taskId
+    public Mono<Profile> assignTask(String author, String taskId) {
+        return profileService.findProfileByPhone(author)
+                .switchIfEmpty(Mono.error(new RuntimeException("forbidden, profile with phone not found")))
+                .flatMap(profile ->
+                        taskRepository.findById(taskId)
+                                .switchIfEmpty(Mono.error(new RuntimeException(String.format("task with id %s not found", taskId))))
+                                .flatMap(task -> {
+                                    if(profile.getTasksPerformer() == null){
+                                        profile.setTasksPerformer(new ArrayList<>());
+                                    }
+                                    profile.getTasksPerformer().add(taskId);
+                                    return profileService.createOrUpdate(Mono.just(profile));
+                                }));
+    }
+
+    @Override
+    public Mono<Task> getTaskById(String taskId) {
+        return taskRepository.findById(taskId)
                 .log()
-                .flatMap(taskRepository::findById)
-                .switchIfEmpty(Mono.empty());
+                .switchIfEmpty(Mono.error(new RuntimeException(String.format("task with id %s not found", taskId))));
     }
 
     @Override
@@ -65,7 +97,12 @@ public class TaskService implements TaskApi {
                 .switchIfEmpty(Flux.empty());
     }
 
-    public Mono<Task> addImages(Mono<String> taskId, List<String> images) {
+    @Override
+    public Mono<Task> getExample() {
+        return Mono.just(Task.example());
+    }
+
+    public Mono<Task> addImages(String taskId, List<String> images) {
         return getTaskById(taskId)
                 .log()
                 .filter(Objects::nonNull)
@@ -78,7 +115,7 @@ public class TaskService implements TaskApi {
                 .switchIfEmpty(Mono.empty());
     }
 
-    public Mono<Task> deletedImages(Mono<String> taskId, List<String> images) {
+    public Mono<Task> deletedImages(String taskId, List<String> images) {
         return getTaskById(taskId)
                 .log()
                 .filter(Objects::nonNull)

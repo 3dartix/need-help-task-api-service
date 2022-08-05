@@ -30,7 +30,7 @@ public class ImageService implements ImageApi {
     private final static String FILE_NAME_FORMAT = "%s-%s"; // uuid-filename
 
     private Mono<Task> basicCheck(String author, String taskId){
-        return taskService.getTaskById(Mono.just(taskId))
+        return taskService.getTaskById(taskId)
                 .log()
                 .filter(Objects::nonNull)
                 .switchIfEmpty(Mono.error(new RuntimeException("error: task with id: {} not found")))
@@ -82,7 +82,7 @@ public class ImageService implements ImageApi {
                                 .collectList()
                         .switchIfEmpty(Mono.empty())
                 )
-                .flatMap(deletedImages -> taskService.deletedImages(Mono.just(taskId), deletedImages))
+                .flatMap(deletedImages -> taskService.deletedImages(taskId, deletedImages))
                 .switchIfEmpty(Mono.empty());
     }
 
@@ -105,7 +105,7 @@ public class ImageService implements ImageApi {
                 })
                 .flatMap(images -> {
                     log.info("upload file execution time {} ms", System.currentTimeMillis() - startMillis);
-                    return taskService.addImages(Mono.just(taskId), images);
+                    return taskService.addImages(taskId, images);
                 });
     }
 

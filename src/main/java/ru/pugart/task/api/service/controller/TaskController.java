@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import ru.pugart.task.api.service.repository.entity.Profile;
 import ru.pugart.task.api.service.repository.entity.Task;
 import ru.pugart.task.api.service.service.TaskApi;
 import ru.pugart.task.api.service.service.TaskService;
@@ -24,16 +25,28 @@ public class TaskController implements TaskApi {
     }
 
     @Override
-    @PostMapping(value = "get/{taskId}")
-    public Mono<Task> getTaskById(@PathVariable Mono<String> taskId) {
+    @GetMapping(value = "assign/{author}/{taskId}")
+    public Mono<Profile> assignTask(@PathVariable String author, @PathVariable String taskId) {
+        return taskService.assignTask(author, taskId);
+    }
+
+    @Override
+    @GetMapping(value = "get/{taskId}")
+    public Mono<Task> getTaskById(@PathVariable String taskId) {
         return taskService.getTaskById(taskId);
     }
 
     @Override
-    @PostMapping(value = "get/all")
+    @GetMapping(value = "get/all")
     public Flux<Task> getAllTasks(@RequestParam(required = false) Float lat,
                                   @RequestParam(required = false) Float lon,
                                   @RequestParam(required = false) Float scale) {
         return taskService.getAllTasks(lat, lon, scale);
+    }
+
+    @Override
+    @GetMapping(value = "get/example")
+    public Mono<Task> getExample() {
+        return taskService.getExample();
     }
 }

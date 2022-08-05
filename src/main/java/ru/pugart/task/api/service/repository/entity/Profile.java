@@ -22,12 +22,12 @@ public class Profile {
     private String telegram;
 
     // созданные задачи
-    @Field(type = FieldType.Object, name = "created_tasks")
-    private List<Task> tasksAuthor;
+    @Field(type = FieldType.Text, name = "created_tasks")
+    private List<String> tasksAuthor;
 
     // взятые в работу
-    @Field(type = FieldType.Object, name = "created_tasks")
-    private List<Task> tasksPerformer;
+    @Field(type = FieldType.Text, name = "tasks_performer")
+    private List<String> tasksPerformer;
 
     // проверен
     @Field(type = FieldType.Boolean, name = "verified")

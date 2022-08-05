@@ -9,8 +9,8 @@ app:
     default-group: "NEED_HELP_CLIENT"
     admin-group: "NEED_HELP_ADMIN"
   credentials:
-    phone: 12345
-    password: 12345
+    phone: "000000"
+    password: "000000"
   allowed-file-extension:
     - jpg
     - png
@@ -26,6 +26,10 @@ file:
     image-size: 10485760
     file-size: 1073741824
 
+logging:
+  level:
+    root: INFO
+#    root: DEBUG
 
 spring:
   servlet:

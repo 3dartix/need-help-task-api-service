@@ -9,6 +9,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Document(indexName = "task_index")
@@ -35,9 +36,11 @@ public class Task {
 
     public static Task example() {
         return Task.builder()
-                .author("1")
+                .id("example")
+                .author("example")
                 .taskDetails(TaskDetails.example())
-                .performerOrders(null)
+                .taskCategory(Category.example())
+                .performerOrders(Arrays.asList(PerformerOrder.example(), PerformerOrder.example()))
                 .build();
     }
 }
