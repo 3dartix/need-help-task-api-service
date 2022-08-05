@@ -29,7 +29,7 @@ public class ProfileService implements ProfileApi {
 
     @PostConstruct
     private void init(){
-        log.info("getting admin roles from keycloak...");
+        log.debug("getting admin roles from keycloak...");
         ADMIN_ROLES = extUiApiClient.getToken(appConfig.getCredentials())
                 .filter(Objects::nonNull)
                 .log()
@@ -38,7 +38,7 @@ public class ProfileService implements ProfileApi {
                                 .log()
                                 .collectList())
                 .block();
-        log.info("found next roles: {}", ADMIN_ROLES);
+        log.debug("found next roles: {}", ADMIN_ROLES);
     }
 
     @Override
@@ -64,8 +64,14 @@ public class ProfileService implements ProfileApi {
                 .switchIfEmpty(Mono.empty());
     }
 
+    @Override
+    public Mono<Profile> getProfile(String authorQuery) {
+        return findProfileByPhone(authorQuery);
+    }
+
     public Mono<Profile> findProfileByPhone(String phone) {
         return profileRepository.findByPhone(phone)
+                .log()
                 .switchIfEmpty(Mono.error(new RuntimeException(String.format("error, user with id: %s not found", phone))));
     }
 
